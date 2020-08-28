@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiajiao.dao.PaperDao">
+
+	<insert id="insert">
+		INSERT INTO
+		t_paper(title,degree,grade,course,content,downLink,downPwd,pubTime,sort)
+		VALUES(#{title},#{degree},#{grade},#{course},#{content},#{downLink},#{downPwd},now(),#{sort})
+	</insert>
+
+	<select id="findByPid" resultType="com.jiajiao.bean.Paper">
+		SELECT
+		pId,title,degree,grade,course,content,downLink,downPwd,view,downNum,pubTime,sort
+		FROM t_paper WHERE pId = #{0}
+	</select>
+
+	<select id="findPaperByGrade"
+		resultType="com.jiajiao.bean.Paper">
+		SELECT
+		pId,title,degree,grade,content,course,downLink,downPwd,view,downNum,pubTime,sort
+		FROM t_paper
+		WHERE t_paper.grade=#{0} AND display=1
+		ORDER BY sort desc,
+		pubTime desc
+
+	</select>
+
+
+	<select id="findTopEightPaperByGrade"
+		resultType="com.jiajiao.bean.Paper">
+		SELECT pId,title FROM t_paper
+		WHERE t_paper.grade=#{0} AND
+		display=1
+		ORDER BY sort desc, pubTime desc LIMIT 0,8
+	</select>
+
+	<select id="pageFindPaperByGrade"
+		resultType="com.jiajiao.bean.Paper">
+		SELECT pId,title FROM t_paper
+		WHERE t_paper.grade=#{0} AND
+		display=1
+		ORDER BY sort desc, pubTime desc limit #{1},#{2}
+
+	</select>
+
+	<select id="pageFindAllPaperListCoutByGrade"
+		resultType="Integer">
+		SELECT COUNT(pid) FROM t_paper WHERE t_paper.grade=#{0} AND
+		display=1
+	</select>
+
+
+	<select id="pageConditionFindAllPaperListCoutByGrade"
+		resultType="Integer">
+		SELECT COUNT(pid) FROM t_paper
+		WHERE 1=1 AND display=1
+		<if test="grade ==0 and course !=0">and course=#{0}</if>
+		<if test="grade !=0 and course ==0">and grade=#{1}</if>
+		<if test="grade !=0 and course !=0">and grade=#{0} and course=#{1}</if>
+	</select>
+
+
+	<select id="pageConditionFindPaperByGrade"
+		resultType="com.jiajiao.bean.Paper">
+		SELECT pId,title FROM t_paper
+		WHERE 1=1 AND display=1
+		<if test="grade ==0 and course ==0"> ORDER BY sort desc, pubTime desc limit #{2},#{3}</if>
+		<if test="grade ==0 and course !=0">and course=#{1} ORDER BY sort desc, pubTime desc limit
+			#{2},#{3}
+		</if>
+		<if test="grade !=0 and course ==0">and grade=#{0} ORDER BY sort desc, pubTime desc limit
+			#{2},#{3}
+		</if>
+		<if test="grade !=0 and course !=0">and grade=#{0} and course=#{1} ORDER BY sort desc, pubTime
+			desc limit #{2},#{3}
+		</if>
+	</select>
+
+	<select id="findTopTenPaper" resultType="com.jiajiao.bean.Paper">
+		SELECT pId,title FROM
+		t_paper WHERE display=1
+		ORDER BY sort desc, pubTime desc LIMIT 0,10
+	</select>
+
+	<select id="findPaperByDegree"
+		resultType="com.jiajiao.bean.Paper">
+		SELECT
+		pId,title,course,display,degree,grade,downLink,downPwd,view,downNum,pubTime,sort
+		FROM t_paper
+		WHERE t_paper.degree=#{0}
+		ORDER BY sort desc, pubTime desc
+	</select>
+
+	<update id="ChangePaperDisplay">
+		UPDATE t_paper SET display=#{display} WHERE
+		pId=#{pId}
+	</update>
+
+	<update id="update">
+		UPDATE t_paper SET
+		title=#{title},degree=#{degree},grade=#{degree},course=#{degree},content=#{degree},
+		downLink=#{downLink},downPwd=#{downPwd},view=#{view},downNum=#{downNum},sort=#{sort}
+		WHERE pId=#{pId}
+	</update>
+
+	<select id="findTopSixPaper" resultType="com.jiajiao.bean.Paper">
+		SELECT pId,title FROM
+		t_paper ORDER BY sort desc,pubTime desc LIMIT 0,6
+	</select>
+
+	<update id="addPaperViewNum">
+		UPDATE t_paper set view=view+1 WHERE pId=#{pId}
+	</update>
+
+	<select id="findTopFivePaperListByDegree"
+		resultType="com.jiajiao.bean.Paper">
+		SELECT pId,title FROM t_paper WHERE degree=#{0} ORDER BY
+		sort desc,pubTime
+		desc LIMIT 0,5
+	</select>
+
+	<select id="pageFindPaperListByConDition"
+		resultType="com.jiajiao.bean.Paper">
+		SELECT pId,title FROM t_paper
+		WHERE 1=1 AND display=1
+
+		<if test="degree==0 and grade ==0 and course ==0"> ORDER BY sort desc, pubTime desc limit #{3},#{4}</if>
+		<if test="degree!=0 and grade ==0 and course ==0">and degree=#{0} ORDER BY sort desc, pubTime desc limit
+			#{3},#{4}
+
+		</if>
+		<if test="degree==0 and grade !=0 and course ==0">and grade=#{1} ORDER BY sort desc, pubTime desc limit
+			#{3},#{4}
+
+		</if>
+		<if test="degree==0 and grade ==0 and course !=0">and course=#{2} ORDER BY sort desc, pubTime desc limit
+			#{3},#{4}
+
+		</if>
+		<if test="degree!=0 and grade !=0 and course ==0">and degree=#{0} and grade=#{1} ORDER BY sort desc, pubTime
+			desc limit #{3},#{4}
+
+		</if>
+		<if test="degree!=0 and grade ==0 and course !=0">and degree=#{0} and course=#{2} ORDER BY sort desc,
+			pubTime desc limit #{3},#{4}
+
+		</if>
+		<if test="degree==0 and grade !=0 and course !=0">and grade=#{1} and course=#{2} ORDER BY sort desc, pubTime
+			desc limit #{3},#{4}
+
+		</if>
+		<if test="degree!=0 and grade !=0 and course !=0">and degree=#{0} and grade=#{1} and course=#{2} ORDER BY
+			sort desc, pubTime desc limit #{3},#{4}
+
+		</if>
+	</select>
+</mapper>

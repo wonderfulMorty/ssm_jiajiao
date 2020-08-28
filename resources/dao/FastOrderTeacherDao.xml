@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiajiao.dao.FastOrderTeacherDao">
+
+	<insert id="insert">
+		INSERT INTO
+		t_fastorderteacher(name,phone,teachingCourse,teachingCourseName,wxNumber,publicTime,state,ip)
+		VALUES(#{name},#{phone},#{teachingCourse},#{teachingCourseName},#{wxNumber},now(),1,#{ip})
+	</insert>
+
+
+	<select id="calcOrderTeacherNumByIp"
+		resultType="Integer">
+		SELECT count(fotId) FROM t_fastorderteacher
+		Where ip=#{0}
+		AND state IN (1,2,3,4)
+	</select>
+
+	<select id="findAllFastORderTeacher"
+		resultType="com.jiajiao.bean.FastOrderTeacher">
+		SELECT fotId,
+		name,t_fastorderteacher.phone,teachingCourse,teachingCourseName,t_fastorderteacher.wxNumber,orderPrice,
+		IFNULL(t_fastorderteacher.teacherId,'')
+		teacherId,IFNULL(teacherName,'') teacherName,IFNULL(remark,'')
+		remark,state,publicTime,ip
+		FROM t_fastorderteacher
+		LEFT JOIN t_teacher
+		ON t_fastorderteacher.teacherId=t_teacher.teacherId
+	</select>
+
+	<select id="findFastOrderTeacherInfoByFotId"
+		resultType="com.jiajiao.bean.FastOrderTeacher">
+		SELECT fotId,
+		name,t_fastorderteacher.phone,teachingCourse,teachingCourseName,t_fastorderteacher.wxNumber,orderPrice,
+		IFNULL(t_fastorderteacher.teacherId,'')
+		teacherId,IFNULL(teacherName,'') teacherName,IFNULL(remark,'')
+		remark,state,publicTime,ip
+		FROM t_fastorderteacher
+		LEFT JOIN t_teacher
+		ON t_fastorderteacher.teacherId=t_teacher.teacherId
+		Where fotId=#{0};
+	</select>
+
+	<update id="updateFastOrderTeacherInfo">
+		UPDATE t_fastorderteacher
+		SET
+		teacherId=#{teacherId},name=#{name},phone=#{phone},
+		wxNumber=#{wxNumber},orderPrice=#{orderPrice},remark=#{remark},state=#{state}
+		WHERE fotId=#{7};
+	</update>
+
+	<select id="findFastOrderTeacherInfoByTeacherId"
+		resultType="com.jiajiao.bean.FastOrderTeacher">
+		SELECT fotId,
+		name,t_fastorderteacher.phone,teachingCourse,teachingCourseName,t_fastorderteacher.wxNumber,orderPrice,
+		IFNULL(t_fastorderteacher.teacherId,'')
+		teacherId,IFNULL(teacherName,'') teacherName,IFNULL(remark,'')
+		remark,state,publicTime,ip
+		FROM t_fastorderteacher
+		LEFT JOIN t_teacher
+		ON t_fastorderteacher.teacherId=t_teacher.teacherId
+		WHERE
+		t_fastorderteacher.teacherId=#{0}
+		ORDER BY
+		t_fastorderteacher.publicTime DESC;
+	</select>
+
+
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiajiao.dao.CourseDao">
+
+    <select id="findAllCourseList" resultType="com.jiajiao.bean.Course">
+      SELECT a.courseid courseId,a.coursename courseName,a.kemuxiaolei,b.content kemuxiaoleiName,a.kemudalei,c.content kemudaleiName 
+				FROM t_course a,t_dictinfo b,t_dictinfo c 
+				WHERE a.kemuxiaolei = b.dictid AND a.kemudalei = c.dictid
+    </select>
+    
+    
+	<select id="findCourseById" resultType="com.jiajiao.bean.Course">
+	select courseId,courseName,kemuxiaolei,kemudalei from t_course where courseId=#{0}
+	</select>
+    
+    
+    <select id="findCourseBykemudalei" resultType="com.jiajiao.bean.Course">
+    	SELECT courseId,courseName FROM t_course WHERE kemudalei=#{0}
+    </select>
+    
+    <select id="findCourseListByIsMobileAndKemudalei" resultType="com.jiajiao.bean.Course" parameterType="Integer">
+    	SELECT courseId,courseName,kemuxiaolei,kemudalei from t_course WHERE isMobile=1
+    	<if test="_parameter == 1">AND kemudalei in(1,2,3,4)</if>
+    	<if test="_parameter == 2">AND kemudalei =6</if>
+    	<if test="_parameter == 3">AND kemudalei =7</if>
+    </select>
+    
+    
+</mapper>

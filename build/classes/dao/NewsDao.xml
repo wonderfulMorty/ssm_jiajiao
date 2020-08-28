@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiajiao.dao.NewsDao">
+
+<insert id="insert">
+INSERT INTO t_news(title,degree,content,source,viewNum,display,pubTime,sort)
+				VALUES(#{title},#{degree},#{content},
+				#{source},#{viewNum},#{display},
+				now(),#{sort})
+</insert>
+    
+    
+<select id="findTopEightNewsByDegree" resultType="com.jiajiao.bean.News">
+SELECT nId,title FROM t_news 
+				WHERE t_news.degree=#{0} 
+				ORDER BY sort desc, pubTime desc LIMIT 0,8 
+</select>
+
+<select id="findBynId" resultType="com.jiajiao.bean.News">
+SELECT  nId,title,degree,content,source,viewNum,display,pubTime,sort 
+				 FROM t_news  WHERE nId = #{0}
+</select>
+    
+    
+<select id="pagefindAllNewsListCoutByGrade" resultType="Integer">
+SELECT COUNT(nId) FROM t_news WHERE t_news.degree=#{0}
+</select>
+
+<select id="PageFindNewsBydegree" resultType="com.jiajiao.bean.News">
+SELECT nId,title,pubTime FROM t_news 
+				WHERE t_news.degree=? 
+				ORDER BY sort desc, pubTime desc limit #{0},#{1}
+</select>
+
+<select id="findTopTenNews" resultType="com.jiajiao.bean.News">
+ SELECT nId,title FROM t_news
+				ORDER BY sort desc, pubTime desc LIMIT 0,10 
+</select>
+
+<select id="findNewsByDegree" resultType="com.jiajiao.bean.News">
+ SELECT nId,title,degree,source,viewNum,display,pubTime,sort  
+				FROM t_news WHERE degree=#{0}
+				 ORDER BY sort desc, pubTime desc 
+</select>
+
+<update id="updateNews">
+UPDATE t_news set title=#{title},degree=#{degree},content=#{content},
+source=#{source},viewNum=#{viewNum},
+				display=#{display},sort=#{sort} 
+				WHERE nId=#{nId} 
+</update>
+
+<update id="changeNewsDisplay">
+UPDATE t_news set display=#{0} WHERE nId=#{1}
+</update>
+
+<select id="findTopSixNews" resultType="com.jiajiao.bean.News">
+SELECT nId,title FROM t_news  ORDER BY sort desc,pubTime desc LIMIT 0,6
+</select>
+
+<update id="addNewsViewNum">
+UPDATE t_news set viewNum=viewNum+1 WHERE nId=#{0}
+</update>
+    
+    
+<select id="findTopFiveNews" resultType="com.jiajiao.bean.News">
+ SELECT nId,title FROM t_news 
+				ORDER BY sort desc, pubTime desc LIMIT 0,5 
+</select>
+
+<select id="pageFindNewsListByDegree" resultType="com.jiajiao.bean.News">
+SELECT nId,title 
+					FROM t_news 
+					WHERE degree=#{0}  AND display=1  ORDER BY sort desc, pubTime desc 
+					limit #{1},#{2}
+</select>
+</mapper>

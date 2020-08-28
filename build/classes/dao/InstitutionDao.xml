@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiajiao.dao.InstitutionDao">
+
+	<select id="findAll" resultType="com.jiajiao.bean.Institution"
+		parameterType="Integer">
+		SELECT
+		iId,iName,kemudalei,course,contactName,contactPhone,teachingType,teachingPrice,isListen,qq,logo,areaId,address,lng,lat,photo,pubTime,sort,introduce,viewNum,display
+		FROM t_institution
+		<if test="_parameter != -1">WHERE display =#{0}</if>
+		ORDER BY sort DESC, pubTime DESC
+	</select>
+
+	<select id="findByIid" resultType="com.jiajiao.bean.Institution">
+		SELECT
+		iId,iName,kemudalei,course,contactName,contactPhone,teachingType,teachingPrice,isListen,qq,logo,areaId,address,lng,lat,photo,pubTime,sort,introduce,viewNum,display
+		from t_institution WHERE iId =#{0}
+	</select>
+
+	<select id="findTopThreeInstitution"
+		resultType="com.jiajiao.bean.Institution">
+		SELECT
+		iId,iName,kemudalei,course,contactName,contactPhone,teachingType,teachingPrice,isListen,qq,logo,areaId,address,lng,lat,photo,pubTime,sort,introduce,viewNum,display
+		FROM t_institution
+		where display=1
+		ORDER BY sort DESC LIMIT 0,3
+	</select>
+
+	<update id="addViewNum">
+		update t_institution set viewNum=viewNum+1 where iId=#{0}
+	</update>
+
+
+	<update id="updateInstitutionDisPlay">
+		update t_institution set display=#{1} where iId=#{0}
+	</update>
+
+	<update id="updateInstitution">
+		UPDATE t_institution SET iName=#{iName},kemudalei=#{kemudalei},course=#{course},
+		contactName=#{contactName},contactPhone=#{contactPhone},teachingType=#{teachingType},
+		teachingPrice=#{teachingPrice},
+		isListen=#{isListen},qq=#{qq},logo=#{logo},
+		areaId=#{areaId},address=#{address},lng=#{lng},
+		lat=#{lat},sort=#{sort},introduce=#{introduce}
+		WHERE iId=#{iId}
+	</update>
+
+	<update id="updatePhoto">
+		UPDATE t_institution SET photo=#{0} WHERE iId=#{1}
+	</update>
+
+	<insert id="insert">
+		INSERT INTO
+		t_institution(iName,kemudalei,course,contactName,contactPhone,teachingType,teachingPrice,isListen,
+		qq,logo,areaId,address,lng,lat,pubTime,sort,introduce)
+		VALUES(#{iName},#{kemudalei},#{course},
+		#{contactName},#{contactPhone},#{teachingType},
+		#{teachingPrice},#{isListen},#{qq},
+		#{logo},#{areaId},#{address},
+		#{lng},#{lat},NOW(),
+		#{sort},#{introduce})
+	</insert>
+
+
+
+
+</mapper>

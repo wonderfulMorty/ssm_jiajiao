@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiajiao.dao.MemberDao">
+
+   <insert id="registerMember">
+   insert into t_member(phone,password,registTime) value(#{0},#{1},now())
+   </insert>
+   
+   <select id="findByPhone" resultType="com.jiajiao.bean.Member">
+ SELECT memberId,name,phone,password,gender,wxNumber,a.districtId,IFNULL(b.district,'') as district,b.district,address,registTime 
+				from t_member a LEFT JOIN t_district b 
+				ON a.districtId = b.districtId WHERE a.phone = #{0}
+   </select>
+    
+    
+    <select id="login" resultType="com.jiajiao.bean.Member">
+    SELECT memberId,name,phone,password,gender,wxNumber,a.districtId,IFNULL(b.district,'') as district,address,registTime,isUse 
+				from t_member a LEFT JOIN t_district b 
+				ON a.districtId = b.districtId
+				WHERE a.phone =#{0} AND a.password = #{1} 
+    </select>
+    
+    <update id="updateMemberInfo">
+    update t_member set name=#{0},gender=#{1},wxNumber=#{2},districtId=#{3},address=#{4} where memberId=#{5}
+    </update>
+    
+    <update id="changePasswordByMemberId">
+    update t_member set password=#{0} where memberId=#{1}
+    </update>
+    
+	
+    <select id="findByMemberId" resultType="com.jiajiao.bean.Member">
+    SELECT memberId,name,phone,password,gender,wxNumber,a.districtId,IFNULL(b.district,'') as district,b.district,address,registTime 
+				from t_member a LEFT JOIN t_district b
+				ON a.districtId = b.districtId WHERE a.memberId =#{0}
+    </select>
+    
+    
+    <select id="findAllMember" resultType="com.jiajiao.bean.Member">
+    SELECT t_member.memberId,name,phone,gender,wxNumber,districtId,address,registTime, 
+				 isUse,IFNULL(a.orderNum,0) as orderNum,IFNULL(b.appointNum,0) as appointNum 
+				 FROM t_member
+				LEFT JOIN ( 
+				SELECT t_orders.publisher1,COUNT(t_orders.publisher1) as orderNum 
+					FROM t_orders
+				GROUP BY t_orders.publisher1
+				 )a ON a.publisher1=t_member.memberId 
+				LEFT JOIN ( 
+				SELECT t_memberorderteacher.memberId,COUNT(t_memberorderteacher.memberId) as appointNum 
+				FROM t_memberorderteacher 
+				GROUP BY t_memberorderteacher.memberId
+				 )b ON b.memberId=t_member.memberId
+				ORDER BY registTime DESC 
+    </select>
+    
+    <update id="changeMemberUse">
+    UPDATE t_member SET isUse=#{0} WHERE memberId=#{1}
+    </update>
+    
+    <select id="countMemberTotal" resultType="Integer">
+    SELECT COUNT(memberId) FROM t_member 
+    </select>
+    
+    <select id="countBanMemberTotal" resultType="Integer">
+    SELECT COUNT(memberId) FROM t_member WHERE isUse=0
+    </select>
+</mapper>

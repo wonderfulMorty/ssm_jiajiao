@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiajiao.dao.TakeOrdersDao">
+
+    <select id="isTakeOrderByOId" resultType="Integer">
+     SELECT COUNT(toId) FROM t_takeorders WHERE teacherId=#{0} AND oId=#{1}
+    </select>
+    
+    
+    <insert id="insert">
+    INSERT INTO t_takeorders(oId,memberId,teacherId,takeTime)
+				VALUES(#{oId},#{memberId},#{teacherId},now())
+    </insert>
+    
+    <select id="calTakeOrderNum" resultType="Integer">
+    SELECT COUNT(toId) FROM t_takeorders WHERE teacherId=#{0}  AND takeStatus=1  
+    
+    </select>
+    
+    <select id="findTakeOrdersListByTeacherId" resultType="com.jiajiao.bean.TakeOrders">
+    
+     SELECT toId,t_takeorders.oId as oId,t_orders.contactName as contactName, 
+				 t_orders.areaId as areaId,t_orders.address as address,t_course.courseName as courseName, memberId, 
+				teacherId,IFNULL(courcePrice,'') courcePrice,takeTime,t_takeorders.remark as remark,takeStatus,t_orders.orderCode as orderCode,t_orders.contactGender as contactGender  
+				FROM t_takeorders 
+				 LEFT JOIN t_orders ON t_takeorders.oId=t_orders.oId 
+				LEFT JOIN t_course ON t_course.courseId=t_orders.teachingCourse 
+				WHERE t_takeorders.teacherId= #{0}
+				ORDER BY t_takeorders.takeTime desc 
+    </select>
+    
+    <select id="findAllTakeOrder" resultType="com.jiajiao.bean.TakeOrders">
+    SELECT a.toId,b.oId,b.orderCode,IFNULL(c.memberId,0),IFNULL(c.name ,'管理员') contactName,d.teacherId,d.teacherName,e.courseName,b.areaId,b.address,a.takeTime,a.takeStatus,a.remark,a.courcePrice 
+				FROM t_takeorders a 
+				 LEFT JOIN t_orders b ON a.oId=b.oId 
+				 LEFT JOIN t_member c ON a.memberId=c.memberId
+				 LEFT JOIN t_teacher d ON a.teacherId=d.teacherId 
+				 LEFT JOIN t_course e ON b.teachingCourse=e.courseId 
+				ORDER BY b.orderCode desc,a.takeTime desc 
+    </select>
+	
+	<select id="findTakeOrderBytoId" resultType="com.jiajiao.bean.TakeOrders">
+	SELECT toId,oId,memberId,teacherId,courcePrice,takeTime,remark,takeStatus 
+				FROM t_takeorders WHERE toId=#{0}
+	</select>
+	
+	<update id="updateTakeOrderInfo">
+	UPDATE t_takeorders SET courcePrice=#{courcePrice},takeStatus=#{takeStatus},remark=#{takeStatus} 
+	WHERE toId=#{toId}
+	</update>
+	
+	<select id="findTakeOrderListByOId" resultType="com.jiajiao.bean.TakeOrders">
+	SELECT a.teacherId,b.teacherName as teacherName, courcePrice,takeTime,takeStatus 
+				 FROM t_takeorders a,t_teacher b 
+				 WHERE a.teacherId=b.teacherId AND a.oId=#{0}
+				 ORDER BY takeTime DESC
+	</select>
+    
+    
+</mapper>

@@ -1,0 +1,71 @@
+http://localhost:8080/admin/login.action
+
+insert into t_admin values(1,'admin','e10adc3949ba59abbe56e057f20f883e')
+
+
+
+
+
+
+
+	<select id="findTeacherListIsZhongXiaoXue"
+		resultType="com.jiajiao.bean.Teacher">
+		SELECT teacherId,teacherName,gender,teachingAge,personImg,b.content as
+		educationName,selfEvaluation
+		FROM t_teacher a,t_dictinfo b
+		WHERE (
+		FIND_IN_SET('1',a.keMuDaLei) OR FIND_IN_SET('2',a.keMuDaLei)
+		OR
+		FIND_IN_SET('3',a.keMuDaLei) OR FIND_IN_SET('4',a.keMuDaLei))
+		AND
+		a.education=b.dictId AND a.isUse=1 And a.isCheck=1
+		ORDER BY
+		lastLoginTime DESC
+		<choose>
+			<when test="isMobile == 1">
+				LIMIT 0,8
+			</when>
+			<otherwise>
+				LIMIT 0,6
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findTeacherListIsYueQi"
+		resultType="com.jiajiao.bean.Teacher">
+		SELECT teacherId,teacherName,gender,teachingAge,personImg,b.content as
+		educationName,selfEvaluation
+		FROM t_teacher a,t_dictinfo b
+		WHERE FIND_IN_SET('6',a.keMuDaLei) AND a.education=b.dictId AND a.isUse=1
+		And a.isCheck=1
+		ORDER BY lastLoginTime DESC
+		<choose>
+			<when test="isMobile == 1">
+				LIMIT 0,8
+			</when>
+			<otherwise>
+				LIMIT 0,6
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findTeacherListIsQiLei"
+		resultType="com.jiajiao.bean.Teacher">
+		SELECT teacherId,teacherName,gender,teachingAge,personImg,b.content as educationName,selfEvaluation 
+				FROM t_teacher a,t_dictinfo b
+				 WHERE  FIND_IN_SET('7',a.keMuDaLei) AND a.education=b.dictId  AND a.isUse=1  And a.isCheck=1 "
+				+ " ORDER BY lastLoginTime DESC 
+		<choose>
+			<when test="isMobile == 1">
+				LIMIT 0,8
+			</when>
+			<otherwise>
+				LIMIT 0,6
+			</otherwise>
+		</choose>
+	</select>
+
+	
+	
+	com.mysql.jdbc.Driver
+	

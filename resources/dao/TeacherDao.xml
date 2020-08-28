@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiajiao.dao.TeacherDao">
+
+	
+
+
+	<select id="findTeacherListIsZhongXiaoXue"
+		resultType="com.jiajiao.bean.Teacher">
+		SELECT teacherId,teacherName,gender,teachingAge,personImg,b.content as
+		educationName,selfEvaluation
+		FROM t_teacher a,t_dictinfo b
+		WHERE (
+		FIND_IN_SET('1',a.keMuDaLei) OR FIND_IN_SET('2',a.keMuDaLei)
+		OR
+		FIND_IN_SET('3',a.keMuDaLei) OR FIND_IN_SET('4',a.keMuDaLei))
+		AND
+		a.education=b.dictId AND a.isUse=1 And a.isCheck=1
+		ORDER BY
+		lastLoginTime DESC
+		<choose>
+			<when test="isMobile == 1">
+				LIMIT 0,8
+			</when>
+			<otherwise>
+				LIMIT 0,6
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findTeacherListIsYueQi"
+		resultType="com.jiajiao.bean.Teacher">
+		SELECT teacherId,teacherName,gender,teachingAge,personImg,b.content as
+		educationName,selfEvaluation
+		FROM t_teacher a,t_dictinfo b
+		WHERE
+		FIND_IN_SET('6',a.keMuDaLei) AND a.education=b.dictId AND a.isUse=1
+		And a.isCheck=1
+		ORDER BY lastLoginTime DESC
+		<choose>
+			<when test="isMobile == 1">
+				LIMIT 0,8
+			</when>
+			<otherwise>
+				LIMIT 0,6
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findTeacherListIsQiLei"
+		resultType="com.jiajiao.bean.Teacher">
+		SELECT teacherId,teacherName,gender,teachingAge,personImg,b.content as
+		educationName,selfEvaluation
+		FROM t_teacher a,t_dictinfo b
+		WHERE
+		FIND_IN_SET('7',a.keMuDaLei) AND a.education=b.dictId AND a.isUse=1
+		And a.isCheck=1 
+		 ORDER BY lastLoginTime DESC
+		<choose>
+			<when test="isMobile == 1">
+				LIMIT 0,8
+			</when>
+			<otherwise>
+				LIMIT 0,6
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findByPhone" resultType="com.jiajiao.bean.Teacher">
+		SELECT
+		teacherId,teacherName,phone,wxNumber,gender,coursePrice,personImg,birthday,province,
+		education,c.content as educationName,identity,d.content as
+		identityName,lastLoginTime,professional,school,areaId,district as
+		area,address,teachingWay,teachingTime,
+		keMuXiaoLei,keMuDaLei,teachingCource,teachingArea,certificate,selfEvaluation,teachingCase,
+		idPhoto,teachingAge,teacherType,isCheck,isUse
+		FROM t_teacher a
+		LEFT JOIN
+		t_district b ON a.areaId=b.districtId
+		LEFT JOIN t_dictinfo c ON
+		a.education=c.dictId
+		LEFT JOIN t_dictinfo d ON a.identity=d.dictId
+		WHERE a.phone=#{0} AND a.isUse=1
+	</select>
+
+	<insert id="insertByPhoneAndPwd">
+		insert into
+		t_teacher(phone,password,registTime,isCheck,isUse)
+		value(#{phone},#{password},now(),#{isCheck},#{isUse})
+	</insert>
+
+	<select id="findByPhoneAndPwd"
+		resultType="com.jiajiao.bean.Teacher">
+		SELECT
+		teacherId,teacherName,phone,password,wxNumber,gender,coursePrice,personImg,birthday,province,
+		education,c.content as educationName,identity,d.content as
+		identityName,lastLoginTime,professional,school,areaId,district as
+		area,address,teachingWay,teachingTime,
+		keMuXiaoLei,keMuDaLei,teachingCource,teachingArea,certificate,selfEvaluation,teachingCase,
+		idPhoto,teachingAge,teacherType,isCheck,isUse
+		FROM t_teacher a
+		LEFT JOIN
+		t_district b ON a.areaId=b.districtId
+		LEFT JOIN t_dictinfo c ON
+		a.education=c.dictId
+		LEFT JOIN t_dictinfo d ON a.identity=d.dictId
+		WHERE a.phone=#{0} And password=#{1}
+	</select>
+
+	<insert id="updateLastLoginTimeByPhone">
+		update t_teacher set lastLoginTime=now() where
+		phone=#{phone}
+	</insert>
+
+
+	<update id="updateTeacher">
+		UPDATE t_teacher
+		SET
+		teacherType=#{teacherType},teacherName=#{teacherName},
+		gender=#{gender},birthday=#{birthday},province=#{province},wxNumber=#{wxNumber},
+		areaId=#{areaId},address=#{address},education=#{education},
+		school=#{school},professional=#{professional},identity=#{identity},teachingArea=#{teachingArea},
+		teachingCource=#{teachingCource},teachingTime=#{teachingTime},coursePrice=#{coursePrice},
+		teachingWay=#{teachingWay},certificate=#{certificate},teachingAge=#{teachingAge},
+		teachingCase=#{teachingCase},selfEvaluation=#{selfEvaluation},keMuXiaoLei=#{keMuXiaoLei},
+		keMuDaLei=#{keMuDaLei}
+		WHERE t_teacher.teacherId=#{teacherId}
+	</update>
+
+	<update id="changePwdByTeacherId">
+		update t_teacher set password=#{password} where
+		teacherId=#{teacherId}
+	</update>
+
+	<update id="updatePersonImg">
+		update t_teacher set personImg=#{personImg} where
+		teacherId=#{teacherId}
+	</update>
+
+
+	<select id="PagefindAllTeacherListCout" resultType="Integer">
+		SELECT
+		COUNT(teacherId) FROM t_teacher WHERE t_teacher.isUse=1 AND
+		t_teacher.isCheck=1
+	</select>
+
+	<select id="PagefindAllTeachersList"
+		resultType="com.jiajiao.bean.Teacher">
+
+		SELECT teacherId,teacherName,identity,c.content as
+		identityName,
+		areaId,b.district as area ,
+		teachingAge,teacherType,teachingCource,selfEvaluation,personImg,lastLoginTime
+		FROM t_teacher a
+		LEFT JOIN t_district b ON a.areaId=b.districtId
+		LEFT
+		JOIN t_dictinfo c ON a.identity=c.dictId
+		WHERE a.isUse=1 AND
+		a.isCheck=1
+		ORDER BY a.lastLoginTime DESC
+		limit #{0},#{1}
+	</select>
+
+	<select id="findByTeacherId"
+		resultType="com.jiajiao.bean.Teacher">
+		SELECT
+		teacherId,teacherName,phone,wxNumber,gender,province,coursePrice,personImg,birthday,
+		education,a.content as educationName,identity,b.content as
+		identityName,lastLoginTime,professional,
+		school,areaId,district as
+		area,address,teachingWay,teachingTime,teachingCource,teachingArea,certificate,
+		selfEvaluation,teachingCase,teachingAge,isCheck,isUse,idPhoto,registTime,teacherType,keMuXiaoLei,keMuDaLei
+		FROM t_teacher
+		LEFT JOIN t_dictinfo a ON t_teacher.education=a.dictId
+		LEFT JOIN t_dictinfo b ON t_teacher.identity=b.dictId
+		LEFT JOIN
+		t_district c ON t_teacher.areaId=c.districtId
+		WHERE teacherId=#{0}
+
+	</select>
+
+	<select id="findAllTeacherList"
+		resultType="com.jiajiao.bean.Teacher">
+		SELECT
+		t_teacher.teacherId,teacherName,phone,wxNumber,gender, (CASE areaId
+		WHEN 1 THEN '城厢区' WHEN 2 THEN '荔城区' WHEN 3 THEN '秀屿区' WHEN 4 THEN
+		'涵江区' WHEN 5 THEN '仙游县' END) as
+		area,address,identity,t_dictinfo.content as
+		identityName,IFNULL(a.num1,0)+IFNULL(b.num2,0)+IFNULL(c.num3,0) as
+		teachingNum,lastLoginTime,isUse,isCheck
+		FROM t_teacher
+		LEFT JOIN
+		t_dictinfo ON t_teacher.identity=t_dictinfo.dictId
+		LEFT JOIN (
+		SELECT
+		t_fastorderteacher.teacherId,COUNT(fotId) num1
+		FROM t_fastorderteacher
+		WHERE t_fastorderteacher.state=3 OR t_fastorderteacher.state=4 OR
+		t_fastorderteacher.state=5 OR t_fastorderteacher.state=6 OR
+		t_fastorderteacher.state=7
+		GROUP BY t_fastorderteacher.teacherId
+		)a ON
+		a.teacherId=t_teacher.teacherId
+		LEFT JOIN
+		(
+		SELECT
+		t_memberorderteacher.teacherId,COUNT(mosId) num2
+		FROM
+		t_memberorderteacher
+		WHERE t_memberorderteacher.state=3 OR
+		t_memberorderteacher.state=4 OR
+		t_memberorderteacher.state=5 OR
+		t_memberorderteacher.state=6 OR
+		t_memberorderteacher.state=7
+		GROUP BY
+		t_memberorderteacher.teacherId
+		)b on b.teacherId=t_teacher.teacherId
+		LEFT JOIN(
+		SELECT t_takeorders.teacherId,COUNT(toId) num3
+		FROM
+		t_takeorders
+		WHERE t_takeorders.takeStatus =2 OR
+		t_takeorders.takeStatus=3 OR
+		t_takeorders.takeStatus=4 OR
+		t_takeorders.takeStatus=5 OR
+		t_takeorders.takeStatus=6
+		GROUP BY
+		t_takeorders.teacherId
+		)c ON c.teacherId=t_teacher.teacherId
+		ORDER BY
+		lastLoginTime DESC
+	</select>
+
+	<update id="changeTeacherUse">
+		UPDATE t_Teacher SET isUse=#{isUse} WHERE
+		teacherId=#{teacherId}
+	</update>
+
+	<update id="changeTeacherCheck">
+		UPDATE t_Teacher SET isCheck=#{isCheck} WHERE
+		teacherId=#{teacherId}
+	</update>
+
+	<select id="pageFindTeacherListCount" resultType="Integer">
+		SELECT COUNT(teacherId) FROM t_teacher
+		WHERE t_teacher.isUse=1 AND
+		t_teacher.isCheck=1
+
+		<if test="course !='0'.toString()">
+			AND FIND_IN_SET(#{course},t_teacher.keMuXiaoLei)
+		</if>
+		<if test="areaId !='0'.toString()">
+			AND FIND_IN_SET(#{areaId},t_teacher.teachingArea)
+		</if>
+		<if test="teacherType !='0'.toString()">
+			AND teacherType=#{teacherType}
+		</if>
+		<if test="gender !=2">
+			AND gender=#{gender}
+		</if>
+	</select>
+
+	<select id="PagefindTeachersList"
+		resultType="com.jiajiao.bean.Teacher">
+		SELECT teacherId,teacherName,identity,c.content as identityName,
+		areaId,b.district as area ,
+		teachingAge,teacherType,teachingCource,selfEvaluation,personImg,lastLoginTime
+		FROM t_teacher a
+		LEFT JOIN t_district b ON a.areaId=b.districtId
+		LEFT
+		JOIN t_dictinfo c ON a.identity=c.dictId
+		WHERE a.isUse=1 AND
+		a.isCheck=1
+		<if test="course !='0'.toString()">
+			AND FIND_IN_SET(#{course},a.keMuXiaoLei)
+		</if>
+		<if test="areaId !='0'.toString()">
+			AND FIND_IN_SET(#{areaId},a.teachingArea)
+		</if>
+		<if test="teacherType !='0'.toString()">
+			AND teacherType=#{teacherType}
+		</if>
+		<if test="gender !=2">
+			AND gender=#{gender}
+		</if>
+		ORDER BY a.lastLoginTime DESC limit #{pageSize},#{currentPage}
+	</select>
+
+	<update id="updateIDImg">
+		update t_teacher set idPhoto=#{idPhoto} where
+		teacherId=#{teacherId}
+	</update>
+
+	<select id="countTeacherTotal" resultType="Integer">
+		SELECT
+		COUNT(teacherId) FROM t_teacher
+	</select>
+
+	<select id="calSuccessJJ" resultType="Integer">
+		SELECT num1+num2 as
+		successjj
+		FROM
+		(SELECT COUNT(teacherId) num1 FROM t_takeorders WHERE
+		teacherId=#{0} AND
+		takeStatus IN(2,3,4) )a ,
+		(SELECT COUNT(teacherId)
+		num2 FROM t_memberorderteacher WHERE teacherId=#{1}
+		AND state IN(2,3,4)
+		)b
+
+	</select>
+
+	<select id="countBanTeacherTotal" resultType="Integer">
+		SELECT
+		COUNT(teacherId) FROM t_teacher WHERE isUse=0
+	</select>
+
+	<select id="countPendingTeacherTotal" resultType="Integer">
+		SELECT
+		COUNT(teacherId) FROM t_teacher WHERE isCheck=0
+	</select>
+
+	<select id="pagefindTeachersListByCondition"
+		resultType="com.jiajiao.bean.Teacher">
+		SELECT teacherId,teacherName,identity,c.content as identityName,
+		areaId,b.district as area ,
+		teachingAge,teacherType,teachingCource,selfEvaluation,personImg,lastLoginTime,school,gender
+		FROM t_teacher a
+		LEFT JOIN t_district b ON a.areaId=b.districtId
+		LEFT
+		JOIN t_dictinfo c ON a.identity=c.dictId
+		WHERE a.isUse=1 AND
+		a.isCheck=1
+		<if test="course !='0'.toString()">
+			AND FIND_IN_SET(#{course},a.teachingCource)
+		</if>
+		<if test="areaId !='0'.toString()">
+			AND FIND_IN_SET(#{areaId},a.teachingArea)
+		</if>
+		<if test="teacherType !='0'.toString()">
+			AND teacherType=#{teacherType}
+		</if>
+		<if test="gender !=2">
+			AND gender=#{gender}
+		</if>
+		ORDER BY a.lastLoginTime DESC limit #{pageSize},#{currentPage}
+	</select>
+
+
+	<insert id="insertByPhoneAndPwd2">
+		insert into t_teacher(phone,password,registTime,isCheck,isUse,teacherType)
+		value(#{phone},#{password},now(),#{isCheck},#{isUse},#{teacherType})
+	</insert>
+
+	<update id="mUpdatePersonal">
+		UPDATE t_teacher SET
+		teacherName=#{teacherName},gender=#{gender},wxNumber=#{wxNumber},
+		birthday=#{birthday},province=#{province},areaId=#{areaId},address=#{address}
+		where teacherId=#{teacherId}
+	</update>
+
+	<update id="mUpdateEducate">
+		UPDATE t_teacher SET
+		school=#{school},professional=#{professional},education=#{education},
+		identity=#{identity} where teacherId=#{teacherId}
+	</update>
+
+	<update id="mUpdateTeaching">
+		UPDATE t_teacher SET
+		teachingArea=#{teachingArea},teachingCource=#{teachingArea},teachingTime=#{teachingArea},
+		coursePrice=#{coursePrice},teachingWay=#{teachingWay},
+		certificate=#{certificate},teachingAge=#{teachingAge},
+		teachingCase=#{teachingCase},
+		selfEvaluation=#{selfEvaluation},keMuXiaoLei=#{keMuXiaoLei},
+		keMuDaLei=#{keMuDaLei} where teacherId=#{teacherId}
+	</update>
+</mapper>

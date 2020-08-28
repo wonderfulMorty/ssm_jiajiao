@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiajiao.dao.NoticeDao">
+
+	<insert id="insert">
+		INSERT INTO t_notice(title,content,type,source,viewNum,display,pubTime,sort)
+		VALUES(#{title},#{content},#{type},
+		#{source},#{viewNum},#{display},
+		now(),#{sort})
+	</insert>
+
+
+	<select id="findAllNotice" resultType="com.jiajiao.bean.Notice">
+		SELECT nId,title,type,source,viewNum,pubTime,sort,display FROM t_notice
+	</select>
+
+	<update id="changeNoticeDisplay">
+		UPDATE t_notice set display=#{0} WHERE nId=#{1}
+	</update>
+
+
+	<select id="findBynId" resultType="com.jiajiao.bean.Notice">
+		SELECT nId,title,type,content,source,viewNum,display,pubTime,sort
+		FROM t_notice WHERE nId = #{0}
+	</select>
+
+
+	<update id="updateNotice">
+		UPDATE t_notice set title=#{title},type=#{type},content=#{content},
+		source=#{source},viewNum=#{viewNum},
+		display=#{display},sort=#{sort}
+		WHERE nId=#{nId}
+	</update>
+
+	<select id="findTopFourNoticeByType"
+		resultType="com.jiajiao.bean.Notice">
+		SELECT nId,title FROM t_notice
+		WHERE t_notice.type=#{0}
+		ORDER BY sort desc, pubTime desc LIMIT 0,4
+	</select>
+
+	<update id="addNoticeViewNum">
+		UPDATE t_notice set viewNum=viewNum+1 WHERE nId=#{0}
+	</update>
+
+
+	<select id="findTopTwelveNotice"
+		resultType="com.jiajiao.bean.Notice">
+		SELECT nId,title FROM t_notice ORDER BY sort desc,pubTime desc LIMIT 0,12
+	</select>
+
+
+	<select id="pageFindAllNoticeListByType"
+		resultType="com.jiajiao.bean.Notice" parameterType="Integer">
+		SELECT nId,title,pubTime FROM t_notice
+		<if test="_parameter == 0">ORDER BY sort desc, pubTime desc limit #{0},#{1}</if>
+		<if test="_parameter == 1">WHERE t_notice.type=#{0}
+			ORDER BY sort desc, pubTime desc limit #{0},#{1}
+		</if>
+	</select>
+
+
+	<select id="pageFindAllNoticeListCountByType"
+		resultType="com.jiajiao.bean.Notice" parameterType="Integer">
+		<choose>
+			<when test="_parameter == 0">
+				SELECT COUNT(nId) FROM t_notice
+			</when>
+			<otherwise>
+				SELECT COUNT(nId) FROM t_notice WHERE t_notice.type=#{0}
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="pageFindNoticeListByType"
+		resultType="com.jiajiao.bean.Notice">
+		SELECT nId,title
+		FROM t_notice
+		WHERE type=#{0} AND display=1 ORDER BY sort desc, pubTime desc
+		limit #{1},#{2}
+	</select>
+</mapper>

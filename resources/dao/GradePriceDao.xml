@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiajiao.dao.GradePriceDao">
+
+    <select id="findAllCoursePriceList" resultType="com.jiajiao.bean.GradePrice">
+     SELECT pId,gradeId,b.content as gradeName,tminPrice,tmaxPrice,sminPrice,smaxPrice,gradeType,c.content AS gradeTypeName
+					FROM t_gradeprice a,t_dictinfo b,t_dictinfo c 
+					WHERE a.gradeId=b.dictId AND a.gradeType=c.dictId;
+    </select>
+    
+    
+	
+    
+    
+</mapper>

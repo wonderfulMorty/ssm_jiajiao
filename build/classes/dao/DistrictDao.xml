@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiajiao.dao.DistrictDao">
+
+    <select id="findAllDistrictList" resultType="com.jiajiao.bean.District">
+     SELECT districtId,district  FROM t_district
+    </select>
+    
+    
+	
+    
+    
+</mapper>

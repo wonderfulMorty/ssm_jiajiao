@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiajiao.dao.OrdersDao">
+
+	<select id="findById" resultType="com.jiajiao.bean.Orders">
+		SELECT
+		a.oId,publisher1,ifnull(publisher2,''),a.teachingCourse,b.courseName,a.contactName,
+		a.contactPhone,a.contactGender,wxNumber,studentGender,studentGradeId,c.content
+		as studentGradeName,
+		a.profile,a.areaId,d.district as
+		area,address,teachingTime,coursePrice,publicTime,teachingWay,
+		(CASE
+		a.teachingWay WHEN 20 THEN '一对一家教上门' WHEN 21 THEN '一对一学生上门' ELSE
+		'一对一家教上门、一对一学生上门' END) as teachingWayName,
+		a.teacherGender,a.teacherType,
+		(CASE a.teacherType WHEN 18 THEN
+		'老师（在职/进修/离职/退休）' WHEN 19 THEN '在校大学生/毕业生'
+		ELSE '老师、在校大学生/毕业生' END) as
+		teacherTypeName,
+		a.requirements,a.orderStatus,a.remark,a.orderCode,a.lng,a.lat
+		FROM
+		t_orders a,t_course b,t_dictinfo c,t_district d
+		WHERE
+		a.teachingCourse=b.courseId AND a.studentGradeId=c.dictId AND
+		a.areaId=d.districtId AND oId=#{0}
+	</select>
+
+
+	<select id="findByStatus" resultType="com.jiajiao.bean.Orders">
+		SELECT
+		a.oId,a.teachingCourse,b.courseName,a.areaId,c.district as
+		area,a.coursePrice,a.teacherType,
+		(
+		CASE a.teacherType
+		WHEN 18 THEN
+		'在校大学生/毕业生'
+		WHEN 19 THEN '老师（在职/进修/离职/退休）'
+		ELSE '不限'
+		END
+		) as
+		teacherTypeName,
+		a.requirements
+		FROM t_orders a,t_course b,t_district c
+		WHERE a.orderStatus=22 AND a.teachingCourse=b.courseId AND
+		a.areaId=c.districtId
+		ORDER BY publicTime DESC LIMIT 0,8
+	</select>
+
+	<update id="updateStatusByoId">
+		UPDATE t_orders SET orderStatus=#{orderStatus} WHERE
+		oId=#{oId}
+	</update>
+
+	<insert id="insertOrder">
+		INSERT INTO
+		t_orders(publisher1,publisher2,teachingCourse,contactName,contactPhone,contactGender,wxNumber,
+		studentGender,studentGradeId,profile,areaId,address,teachingTime,coursePrice,teachingWay,teacherGender,
+		teacherType,requirements,orderStatus,publicTime,orderCode,gradeId,lng,lat)
+		VALUES(#{0},#{1},#{2},
+		#{3},#{4},#{5},#{6},
+		#{7},#{8},#{9},#{10},#{11},
+		#{12},#{13},#{14},#{15},#{16},
+		#{17},#{18},now(),#{19},#{20},#{21},#{22})
+	</insert>
+
+
+	<select id="PagefindAllOrdersList"
+		resultType="com.jiajiao.bean.Orders">
+		SELECT
+		a.oId,a.teachingCourse,b.courseName,contactName,contactGender,orderCode,
+		areaId,c.district as
+		area,coursePrice,teacherType,requirements,orderStatus,teachingTime
+		FROM t_orders a,t_course b,t_district c
+		WHERE
+		a.teachingCourse=b.courseId AND a.areaId=c.districtId
+		ORDER BY
+		publicTime DESC
+		limit #{0},#{1}
+	</select>
+
+	<select id="PagefindAllOrdersListCout" resultType="Integer">
+		SELECT
+		COUNT(oId) FROM t_orders
+	</select>
+
+	<select id="findByMemberId" resultType="com.jiajiao.bean.Orders">
+		SELECT a.oId,
+		a.orderCode, b.courseName, a.coursePrice, a.publicTime,
+		orderStatus,
+		IFNULL(c.teacherId, '') teacherId, IFNULL(d.teacherName,
+		'')
+		teacherName
+		FROM
+		t_orders a
+		LEFT JOIN t_course b ON a.teachingCourse =
+		b.courseId
+		LEFT JOIN t_takeorders c ON a.oId = c.oId
+		AND c.takeStatus IN
+		(2, 3, 4)
+		LEFT JOIN t_teacher d ON c.teacherId = d.teacherId
+		WHERE
+		a.publisher1=#{0}
+		ORDER BY a.publicTime DESC
+
+	</select>
+
+	<select id="findAllOrderList"
+		resultType="com.jiajiao.bean.Orders">
+		SELECT
+		a.oId,a.orderCode,publisher1,publisher2,a.contactName,a.contactPhone,a.wxNumber,a.areaId,a.address,a.teachingCourse,b.courseName
+		,a.publicTime,orderStatus,a.remark,IFNULL(c.teacherId,'')
+		teacherId,IFNULL(d.teacherName,'') teacherName
+		FROM t_orders a
+		LEFT JOIN
+		t_course b ON a.teachingCourse=b.courseId
+		LEFT JOIN t_takeorders c ON
+		a.oId=c.oId AND c.takeStatus in(2,3,4)
+		LEFT JOIN t_teacher d ON
+		c.teacherId=d.teacherId
+		ORDER BY a.publicTime DESC
+	</select>
+
+	<update id="updateOrderInfo">
+		UPDATE t_orders SET
+		contactName=#{contactName},contactPhone=#{contactPhone},wxNumber=#{wxNumber},remark=#{remark}
+		WHERE oId=#{oId}
+	</update>
+
+	<select id="pagefindOrdersList"
+		resultType="com.jiajiao.bean.Orders">
+		SELECT
+		a.oId,a.teachingCourse,b.courseName,contactName,contactGender,orderCode,
+		areaId,c.district as
+		area,coursePrice,teacherType,requirements,orderStatus,teachingTime
+		FROM t_orders a,t_course b,t_district c
+		WHERE
+		a.teachingCourse=b.courseId AND a.areaId=c.districtId
+		<if test="course !='0'.toString()">AND a.gradeId=#{course}</if>
+		<if test="areaId !='0'.toString()">AND a.areaId=#{areaId}</if>
+		<if test="teacherType !=0">AND a.teacherType=#{teacherType} </if>
+		<if test="gender !=2">AND a.teacherGender=#{gender} </if>
+		ORDER BY publicTime DESC limit #{pageSize},#{currentPage}
+	</select>
+
+	<select id="pagefindOrdersListCout" resultType="Integer">
+		SELECT COUNT(oId) FROM t_orders a
+		WHERE 1=1
+		<if test="course !='0'.toString()">AND a.course=#{course}</if>
+		<if test="areaId !='0'.toString()">AND a.areaId=#{areaId}</if>
+		<if test="teacherType !=0">AND a.teacherType=#{teacherType} </if>
+		<if test="gender !=2">AND a.teacherGender=#{gender} </if>
+	</select>
+
+	<select id="CountOrdersTotal" resultType="Integer">
+		SELECT ocount+mcount as ordersTotal
+		FROM
+		(SELECT COUNT(oId) as ocount FROM t_orders )a,
+		(SELECT count(mosId) as mcount FROM t_memberorderteacher )b
+	</select>
+
+	<select id="CountPriceTotal" resultType="Integer">
+		SELECT sum1+sum2 as priceTotal
+		FROM
+		(SELECT SUM(courcePrice) as sum1 FROM t_takeorders WHERE
+		t_takeorders.takestatus in (2,3,4) )a,
+		(SELECT SUM(price) as sum2 FROM t_memberorderteacher WHERE
+		t_memberorderteacher.state in (3,4,5) )b
+	</select>
+
+	<select id="calPerMonthPublishTotal" resultType="Integer">
+		SELECT COUNT(oId)
+		FROM t_orders
+		WHERE t_orders.publisher1=#{0} AND
+		year(t_orders.publicTime)=year(curdate()) AND month(curdate())=
+		month(t_orders.publicTime)
+
+	</select>
+
+	<select id="countAppointmentingOrderTotal" resultType="Integer">
+		SELECT COUNT(mosId) FROM t_memberorderteacher WHERE state=1
+	</select>
+
+	<select id="countPublishingFastOrderTotal" resultType="Integer">
+		SELECT COUNT(fotId) FROM t_fastorderteacher WHERE state=1
+	</select>
+
+	<select id="countPublishingOrderTotal" resultType="Integer">
+		SELECT COUNT(oId) FROM t_orders WHERE orderStatus=22
+	</select>
+
+	<select id="countRefunddingOrderTotal" resultType="Integer">
+		SELECT sum1+sum2 as refunddingOrderTota
+		FROM
+		(SELECT COUNT(mosId) sum1 FROM t_memberorderteacher WHERE state=7) a,
+		(SELECT COUNT(toId) sum2 FROM t_takeorders WHERE takeStatus=5 )b
+	</select>
+
+	<select id="pagefindOrderListByCondition"
+		resultType="com.jiajiao.bean.Orders">
+		SELECT a.oId,a.orderCode,a.areaId,c.district as area,
+		a.contactName,a.teachingCourse,courseName,a.studentGender,
+		a.`profile`,coursePrice,address,orderStatus
+		FROM t_orders a
+		LEFT JOIN t_course b ON a.teachingCourse=b.courseId
+		LEFT JOIN t_district c ON a.areaId=c.districtId
+		WHERE 1=1 AND a.orderStatus IN (22,23,24,25)
+		<if test="courseId !=0">AND a.teachingCourse=#{courseId}</if>
+		<if test="areaId !=0">AND a.areaId=#{areaIdx}</if>
+		<if test="teacherType !=0">AND a.teacherType=#{teacherType} </if>
+		<if test="gender !=2">AND a.teacherGender=#{gender} </if>
+		ORDER BY  a.orderCode DESC  limit #{pageSize},#{currentPage}
+	</select>
+</mapper>

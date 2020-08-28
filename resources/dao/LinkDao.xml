@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiajiao.dao.LinkDao">
+
+    <insert id="insert" >
+     INSERT INTO t_link(webName,webUrl,webDescribe,contactName,webPhone,display,sort,pubTime)
+				 VALUES(#{webName},#{webUrl},#{webDescribe},
+				 #{contactName},#{webPhone},#{display},
+				 #{sort},now())
+    </insert>
+    
+    
+	<select id="find" resultType="com.jiajiao.bean.Link" parameterType="Integer">
+	SELECT lId,webName,webUrl,webDescribe,contactName,webPhone,display,sort,pubTime 
+				FROM t_link 
+	<if test="_parameter != -1">WHERE display =#{0}</if>
+	ORDER BY sort DESC, pubTime DESC 
+	</select>
+	
+	<update id="updateDisplay">
+	update t_link set display=#{0} where lid=#{1}
+	</update>
+    
+    
+    <select id="findByLid" resultType="com.jiajiao.bean.Link">
+    SELECT lid,webName,webUrl,webDescribe,contactName,webPhone,display,sort 
+				from t_link  WHERE lid = #{0}
+				
+    </select>
+    
+    <update id="update">
+    update t_link set webName=#{webName},webUrl=#{webUrl},webDescribe=#{webDescribe},
+    contactName=#{contactName},webPhone=#{webPhone}, display=#{display},sort=#{sort} 
+			where lid=#{lid}
+    </update>
+    
+</mapper>
