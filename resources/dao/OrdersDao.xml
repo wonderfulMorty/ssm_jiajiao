@@ -48,8 +48,8 @@
 	</select>
 
 	<update id="updateStatusByoId">
-		UPDATE t_orders SET orderStatus=#{orderStatus} WHERE
-		oId=#{oId}
+		UPDATE t_orders SET orderStatus=#{0} WHERE
+		oId=#{1}
 	</update>
 
 	<insert id="insertOrder">
@@ -123,8 +123,8 @@
 
 	<update id="updateOrderInfo">
 		UPDATE t_orders SET
-		contactName=#{contactName},contactPhone=#{contactPhone},wxNumber=#{wxNumber},remark=#{remark}
-		WHERE oId=#{oId}
+		contactName=#{1},contactPhone=#{2},wxNumber=#{3},remark=#{4}
+		WHERE oId=#{0}
 	</update>
 
 	<select id="pagefindOrdersList"

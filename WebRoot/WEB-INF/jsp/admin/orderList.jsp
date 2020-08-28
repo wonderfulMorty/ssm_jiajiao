@@ -133,7 +133,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									<td class="td-manage">
 										<a title="派单" onclick="sendOrder('<%=order.getoId() %>','<%=order.getOrderCode() %>','<%=order.getPublisher1() %>')" href="javascript:;">派单</a>
 										<a title="编辑" onclick="member_edit('<%=order.getoId() %>','<%=order.getOrderCode() %>')" href="javascript:;">编辑</a>
-										<a title="删除"  href="javascript:;" >删除</a>
+										<!-- <a title="删除"  href="javascript:;" >删除</a> -->
 									</td>
 								</tr>
 							

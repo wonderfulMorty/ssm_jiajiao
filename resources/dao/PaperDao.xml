@@ -55,9 +55,9 @@
 		resultType="Integer">
 		SELECT COUNT(pid) FROM t_paper
 		WHERE 1=1 AND display=1
-		<if test="grade ==0 and course !=0">and course=#{0}</if>
-		<if test="grade !=0 and course ==0">and grade=#{1}</if>
-		<if test="grade !=0 and course !=0">and grade=#{0} and course=#{1}</if>
+		<if test="grade ==0 and course !=0">and course=#{course}</if>
+		<if test="grade !=0 and course ==0">and grade=#{grade}</if>
+		<if test="grade !=0 and course !=0">and grade=#{grade} and course=#{course}</if>
 	</select>
 
 
@@ -65,15 +65,15 @@
 		resultType="com.jiajiao.bean.Paper">
 		SELECT pId,title FROM t_paper
 		WHERE 1=1 AND display=1
-		<if test="grade ==0 and course ==0"> ORDER BY sort desc, pubTime desc limit #{2},#{3}</if>
-		<if test="grade ==0 and course !=0">and course=#{1} ORDER BY sort desc, pubTime desc limit
-			#{2},#{3}
+		<if test="grade ==0 and course ==0"> ORDER BY sort desc, pubTime desc limit #{pageSize},#{currentPage}</if>
+		<if test="grade ==0 and course !=0">and course=#{course} ORDER BY sort desc, pubTime desc limit
+			#{pageSize},#{currentPage}
 		</if>
-		<if test="grade !=0 and course ==0">and grade=#{0} ORDER BY sort desc, pubTime desc limit
-			#{2},#{3}
+		<if test="grade !=0 and course ==0">and grade=#{grade} ORDER BY sort desc, pubTime desc limit
+			#{pageSize},#{currentPage}
 		</if>
-		<if test="grade !=0 and course !=0">and grade=#{0} and course=#{1} ORDER BY sort desc, pubTime
-			desc limit #{2},#{3}
+		<if test="grade !=0 and course !=0">and grade=#{grade} and course=#{course} ORDER BY sort desc, pubTime
+			desc limit #{pageSize},#{currentPage}
 		</if>
 	</select>
 
@@ -125,33 +125,33 @@
 		SELECT pId,title FROM t_paper
 		WHERE 1=1 AND display=1
 
-		<if test="degree==0 and grade ==0 and course ==0"> ORDER BY sort desc, pubTime desc limit #{3},#{4}</if>
-		<if test="degree!=0 and grade ==0 and course ==0">and degree=#{0} ORDER BY sort desc, pubTime desc limit
-			#{3},#{4}
+		<if test="degree==0 and grade ==0 and course ==0"> ORDER BY sort desc, pubTime desc limit #{pageSize},#{currentPage}</if>
+		<if test="degree!=0 and grade ==0 and course ==0">and degree=#{degree} ORDER BY sort desc, pubTime desc limit
+			#{pageSize},#{currentPage}
 
 		</if>
-		<if test="degree==0 and grade !=0 and course ==0">and grade=#{1} ORDER BY sort desc, pubTime desc limit
-			#{3},#{4}
+		<if test="degree==0 and grade !=0 and course ==0">and grade=#{grade} ORDER BY sort desc, pubTime desc limit
+			#{pageSize},#{currentPage}
 
 		</if>
-		<if test="degree==0 and grade ==0 and course !=0">and course=#{2} ORDER BY sort desc, pubTime desc limit
-			#{3},#{4}
+		<if test="degree==0 and grade ==0 and course !=0">and course=#{course} ORDER BY sort desc, pubTime desc limit
+			#{pageSize},#{currentPage}
 
 		</if>
-		<if test="degree!=0 and grade !=0 and course ==0">and degree=#{0} and grade=#{1} ORDER BY sort desc, pubTime
-			desc limit #{3},#{4}
+		<if test="degree!=0 and grade !=0 and course ==0">and degree=#{degree} and grade=#{grade} ORDER BY sort desc, pubTime
+			desc limit #{pageSize},#{currentPage}
 
 		</if>
-		<if test="degree!=0 and grade ==0 and course !=0">and degree=#{0} and course=#{2} ORDER BY sort desc,
-			pubTime desc limit #{3},#{4}
+		<if test="degree!=0 and grade ==0 and course !=0">and degree=#{degree} and course=#{course} ORDER BY sort desc,
+			pubTime desc limit #{pageSize},#{currentPage}
 
 		</if>
-		<if test="degree==0 and grade !=0 and course !=0">and grade=#{1} and course=#{2} ORDER BY sort desc, pubTime
-			desc limit #{3},#{4}
+		<if test="degree==0 and grade !=0 and course !=0">and grade=#{grade} and course=#{course} ORDER BY sort desc, pubTime
+			desc limit #{pageSize},#{currentPage}
 
 		</if>
-		<if test="degree!=0 and grade !=0 and course !=0">and degree=#{0} and grade=#{1} and course=#{2} ORDER BY
-			sort desc, pubTime desc limit #{3},#{4}
+		<if test="degree!=0 and grade !=0 and course !=0">and degree=#{degree} and grade=#{grade} and course=#{course} ORDER BY
+			sort desc, pubTime desc limit #{pageSize},#{currentPage}
 
 		</if>
 	</select>

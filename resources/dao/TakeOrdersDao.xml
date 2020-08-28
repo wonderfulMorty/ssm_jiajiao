@@ -46,7 +46,7 @@
 	</select>
 	
 	<update id="updateTakeOrderInfo">
-	UPDATE t_takeorders SET courcePrice=#{courcePrice},takeStatus=#{takeStatus},remark=#{takeStatus} 
+	UPDATE t_takeorders SET courcePrice=#{courcePrice},takeStatus=#{takeStatus},remark=#{remark} 
 	WHERE toId=#{toId}
 	</update>
 	

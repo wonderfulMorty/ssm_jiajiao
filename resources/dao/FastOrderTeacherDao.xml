@@ -47,7 +47,7 @@
 		SET
 		teacherId=#{teacherId},name=#{name},phone=#{phone},
 		wxNumber=#{wxNumber},orderPrice=#{orderPrice},remark=#{remark},state=#{state}
-		WHERE fotId=#{7};
+		WHERE fotId=#{fotId};
 	</update>
 
 	<select id="findFastOrderTeacherInfoByTeacherId"
