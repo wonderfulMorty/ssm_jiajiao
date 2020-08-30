@@ -2,6 +2,8 @@ package com.jiajiao.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.jiajiao.bean.Notice;
 
 public interface NoticeDao {
@@ -22,10 +24,10 @@ public interface NoticeDao {
 
 	public List<Notice> findTopTwelveNotice();
 
-	public List<Notice> pageFindAllNoticeListByType(int type, int pageSize,
-			int currentPage);
+	public List<Notice> pageFindAllNoticeListByType(@Param("type")int type, @Param("pageSize")int pageSize,
+			@Param("currentPage")int currentPage);
 
-	public int pageFindAllNoticeListCountByType(int type);
+	public int pageFindAllNoticeListCountByType(@Param("type")int type);
 
 	public List<Notice> pageFindNoticeListByType(int type, int pageSize,
 			Integer pageNo);

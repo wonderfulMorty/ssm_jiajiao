@@ -69,3 +69,57 @@ insert into t_admin values(1,'admin','e10adc3949ba59abbe56e057f20f883e')
 	
 	com.mysql.jdbc.Driver
 	
+	
+	
+	
+				<%-- <%
+				//科目大类列表
+				List<DictInfo> dictInfoList = (List<DictInfo>) request.getAttribute("dictInfoList");
+				//课程列表
+				List<Course> courseList = (List<Course>) request.getAttribute("courseList");
+
+				if (dictInfoList != null) {
+					for (int i = 1; i < dictInfoList.size(); i++) {
+						DictInfo dictInfo = dictInfoList.get(i);
+			%>
+				<dl class="navM1">
+					<dd>
+			<%
+						if (courseList != null) {
+							for (int j = 0; j < courseList.size(); j++) {
+								Course course = courseList.get(j);
+								if (dictInfo.getDictId() == course.getKeMuDaLei()) {
+			%>
+				
+						<li>
+							<A href="javascript:void(0);"><%=course.getCourseName()%> </A>
+						</li>
+			<%
+								}
+			%>	
+			<%
+						  	}
+			%>	
+					</DD>
+					<dt><%=dictInfo.getContent()%>
+						<P>
+			<%
+					  		for (int k = 0; k < courseList.size(); k++) {
+			  					Course course = courseList.get(k);
+			  					if (dictInfo.getDictId() == course.getKeMuDaLei()) {
+			%>
+							<SPAN class="mr"><%=course.getCourseName()%></SPAN>
+			<%
+					  			}
+
+					  		}
+			%>
+						</P>
+					</dt>
+				</dl>
+			<%
+				}
+					}
+				}
+			%> --%>
+			

@@ -183,7 +183,7 @@ var _hmt = _hmt || [];
                     </b>
                     <em class="china"></em>
                     <b class="orange_link">
-                        <a href="<%=basePath%>member/index.action" class="heada">我的</a>
+                        <a href="<%=basePath%>member/index.action" class="heada">${sessionScope.member.getName()}</a>
                     </b>
                     </span>
 					

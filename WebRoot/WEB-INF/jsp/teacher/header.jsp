@@ -255,7 +255,7 @@ var _hmt = _hmt || [];
                         	<a href="<%=basePath %>logout.action" class="heada">退出</a>
                     	</b>
                     	<em class="china"></em>
-                    	<a href="<%=basePath%>teacher/index.action" class="heada">我的</a>
+                    	<a href="<%=basePath%>teacher/index.action" class="heada">${sessionScope.teacher.getTeacherName()}</a>
                     </span>
 		        </div>
 		        <!--end头文件右-->

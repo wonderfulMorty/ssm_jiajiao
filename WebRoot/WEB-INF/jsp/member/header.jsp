@@ -81,7 +81,7 @@ var _hmt = _hmt || [];
                     </b>
                     <em class="china"></em>
                     <b class="orange_link">
-                        <a href="<%=basePath%>member/index.action" class="heada">我的</a>
+                        <a href="<%=basePath%>member/index.action" class="heada">${sessionScope.member.getName()}</a>
                     </b>
                     </span>
 					
@@ -177,7 +177,7 @@ var _hmt = _hmt || [];
 							<a href="<%=basePath %>member/appointList.action">预约教员记录</a>
 						</li>
 						<li>
-							<a href="#">评价教员</a>
+							<a href="../member/orderList.action">评价教员</a>
 						</li>
 						
 					</ul>

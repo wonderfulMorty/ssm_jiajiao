@@ -135,23 +135,23 @@
 
 		</if>
 		<if test="degree==0 and grade ==0 and course !=0">and course=#{course} ORDER BY sort desc, pubTime desc limit
-			#{3},#{4}
+			#{pageSize},#{currentPage}
 
 		</if>
-		<if test="degree!=0 and grade !=0 and course ==0">and degree=#{0} and grade=#{1} ORDER BY sort desc, pubTime
-			desc limit #{3},#{4}
+		<if test="degree!=0 and grade !=0 and course ==0">and degree=#{degree} and grade=#{grade} ORDER BY sort desc, pubTime
+			desc limit #{pageSize},#{currentPage}
 
 		</if>
-		<if test="degree!=0 and grade ==0 and course !=0">and degree=#{0} and course=#{2} ORDER BY sort desc,
-			pubTime desc limit #{3},#{4}
+		<if test="degree!=0 and grade ==0 and course !=0">and degree=#{degree} and course=#{course} ORDER BY sort desc,
+			pubTime desc limit #{pageSize},#{currentPage}
 
 		</if>
-		<if test="degree==0 and grade !=0 and course !=0">and grade=#{1} and course=#{2} ORDER BY sort desc, pubTime
-			desc limit #{3},#{4}
+		<if test="degree==0 and grade !=0 and course !=0">and grade=#{grade} and course=#{course} ORDER BY sort desc, pubTime
+			desc limit #{pageSize},#{currentPage}
 
 		</if>
-		<if test="degree!=0 and grade !=0 and course !=0">and degree=#{0} and grade=#{1} and course=#{2} ORDER BY
-			sort desc, pubTime desc limit #{3},#{4}
+		<if test="degree!=0 and grade !=0 and course !=0">and degree=#{degree} and grade=#{grade} and course=#{course} ORDER BY
+			sort desc, pubTime desc limit #{pageSize},#{currentPage}
 
 		</if>
 	</select>

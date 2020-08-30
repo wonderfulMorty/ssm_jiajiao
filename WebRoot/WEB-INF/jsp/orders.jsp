@@ -94,9 +94,9 @@ var _hmt = _hmt || [];
                         <%
 	                   	if(member!=null){
 	                   	%>
-	                       <a href="<%=basePath%>member/index.action" class="heada">我的</a>
+	                       <a href="<%=basePath%>member/index.action" class="heada">${sessionScope.member.getName()}</a>
 	                   	<%}else if(teacher!=null){ %>
-	                       <a href="<%=basePath%>teacher/index.action" class="heada">我的</a>
+	                       <a href="<%=basePath%>teacher/index.action" class="heada">${sessionScope.teacher.getTeacherName()}</a>
 	                   	<%} %>
                     </b>
                     </span>

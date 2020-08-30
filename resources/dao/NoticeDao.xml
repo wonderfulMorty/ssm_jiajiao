@@ -52,23 +52,28 @@
 
 
 	<select id="pageFindAllNoticeListByType"
-		resultType="com.jiajiao.bean.Notice" parameterType="Integer">
+		resultType="com.jiajiao.bean.Notice">
 		SELECT nId,title,pubTime FROM t_notice
-		<if test="_parameter == 0">ORDER BY sort desc, pubTime desc limit #{0},#{1}</if>
-		<if test="_parameter == 1">WHERE t_notice.type=#{0}
-			ORDER BY sort desc, pubTime desc limit #{0},#{1}
-		</if>
+		<choose>
+			<when test="type == 0">
+				ORDER BY sort desc, pubTime desc limit #{pageSize},#{currentPage}
+			</when>
+			<otherwise>
+				WHERE t_notice.type=#{type}
+			ORDER BY sort desc, pubTime desc limit #{pageSize},#{currentPage}
+			</otherwise>
+		</choose>
 	</select>
 
 
 	<select id="pageFindAllNoticeListCountByType"
-		resultType="com.jiajiao.bean.Notice" parameterType="Integer">
+		resultType="Integer" >
 		<choose>
-			<when test="_parameter == 0">
+			<when test="type == 0">
 				SELECT COUNT(nId) FROM t_notice
 			</when>
 			<otherwise>
-				SELECT COUNT(nId) FROM t_notice WHERE t_notice.type=#{0}
+				SELECT COUNT(nId) FROM t_notice WHERE t_notice.type=#{type}
 			</otherwise>
 		</choose>
 	</select>

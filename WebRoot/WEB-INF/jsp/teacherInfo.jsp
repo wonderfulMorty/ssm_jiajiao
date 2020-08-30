@@ -78,10 +78,10 @@ var _hmt = _hmt || [];
 						class="china"></em> <b class="orange_link"> <%
                         	if (member != null) {
                         %> <a href="<%=basePath%>member/index.action"
-							class="heada">我的</a> <%
+							class="heada">${sessionScope.member.getName()}</a> <%
 	                   		} else if (teacher != null) {
 	                   	%> <a href="<%=basePath%>teacher/index.action"
-							class="heada">我的</a> <%
+							class="heada">${sessionScope.teacher.getTeacherName()}</a> <%
 	                   		}
 	                   	%> </b> </span>
 
